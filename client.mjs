@@ -1,3 +1,5 @@
+const port = 3000;
+
 export class Client {
   constructor() {
       this.isLogin = false;
@@ -24,7 +26,7 @@ export class Client {
    * */
   async loginUser(username) {
       let data = {username: username};
-      let response = await fetch(`https://localhost:3000/api/login`, {
+      let response = await fetch(`https://localhost:${port}/api/login`, {
           method: "POST",
           headers: {
               'Accept': 'application/json',
@@ -44,7 +46,7 @@ export class Client {
    * */
   async logoutUser() {
       let data = {username: this.username};
-      let responce = await fetch(`https://localhost:3000/api/logout`, {
+      await fetch(`https://localhost:${port}/api/logout`, {
           method: "POST",
           headers: {
               'Accept': 'application/json',
