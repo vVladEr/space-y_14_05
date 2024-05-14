@@ -28,6 +28,15 @@ app.get("*", (_, res) => {
   res.sendFile(path.join(rootDir, "spa/build/index.html"));
 })
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+https.createServer(
+        {
+            key: fs.readFileSync("certs/server.key"),
+            cert: fs.readFileSync("certs/server.cert"),
+        },
+        app
+    )
+    .listen(port, function () {
+        console.log(
+            `Listening on port ${port}!`
+        );
+    });
