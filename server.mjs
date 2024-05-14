@@ -5,6 +5,7 @@ import https from "https";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
+import { isatty } from "tty";
 
 const rootDir = process.cwd();
 const port = 3000;
@@ -14,6 +15,23 @@ const loginedUsers = {};
 app.use(express.static('spa/build'));
 app.use(express.json());
 app.use(cookieParser());
+
+const isAuthorized = function(req, res, next){
+  const routeCond = req.originalUrl.includes('api') || req.originalUrl.includes('static') || req.originalUrl.includes('login');
+  console.log(req.cookies);
+  //const authCond = "username" in req.cookies;
+  const authCond =  req.cookies.username in loginedUsers;
+  console.log(routeCond, authCond);
+  if(routeCond || authCond){
+    next();
+    return;
+  }
+  next();
+  res.redirect('/login');
+}
+
+app.use(isAuthorized)
+
 
 app.get("/client.mjs", (_, res) => {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
