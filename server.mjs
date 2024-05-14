@@ -16,18 +16,19 @@ app.use(express.static('spa/build'));
 app.use(express.json());
 app.use(cookieParser());
 
-const isAuthorized = function(req, res, next){
-  const routeCond = req.originalUrl.includes('api') || req.originalUrl.includes('static') || req.originalUrl.includes('login');
-  console.log(req.cookies);
-  //const authCond = "username" in req.cookies;
-  const authCond =  req.cookies.username in loginedUsers;
-  console.log(routeCond, authCond);
-  if(routeCond || authCond){
-    next();
-    return;
+const isAuthorized = function (req, res, next) {
+  if (req.originalUrl.includes('api') ||
+      req.originalUrl.includes('static') ||
+      req.originalUrl.includes('login')) {
+      next();
+      return;
   }
+  if ("username" in req.cookies) {
+      next();
+      return;
+  }
+  res.redirect("/login");
   next();
-  res.redirect('/login');
 }
 
 app.use(isAuthorized)
