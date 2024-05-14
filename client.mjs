@@ -1,4 +1,9 @@
 export class Client {
+  constructor() {
+      this.isLogin = false;
+      this.username = null;
+  }
+
   /**
    * Должен возвращать имя пользователя или null
    * если пользователь не залогинен
@@ -6,7 +11,8 @@ export class Client {
    * @return {Promise<string | null>} username
    * */
   async getUser() {
-    throw new Error("Not implemented");
+      if (!this.isLogin) return null;
+      return this.username;
   }
 
   /**
@@ -17,7 +23,18 @@ export class Client {
    * @return {Promise<string | null>} username
    * */
   async loginUser(username) {
-    throw new Error("Not implemented");
+      let data = {username: username};
+      let response = await fetch(`https://localhost:3000/api/login`, {
+          method: "POST",
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      });
+      this.username = (await response.json())["username"];
+      this.isLogin = true;
+      return this.username;
   }
 
   /**
@@ -26,7 +43,17 @@ export class Client {
    * @return {void}
    * */
   async logoutUser() {
-    throw new Error("Not implemented");
+      let data = {username: this.username};
+      let responce = await fetch(`https://localhost:3000/api/logout`, {
+          method: "POST",
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      });
+      this.isLogin = false;
+      this.username = null;
   }
 
   /**
@@ -50,7 +77,7 @@ export class Client {
    * @return {Promise<About>}
    * */
   async getInfo() {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -63,7 +90,7 @@ export class Client {
    * @return {Promise<EventBrief[]>}
    * */
   async getHistory() {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -80,7 +107,7 @@ export class Client {
    * @return {Promise<EventFull>}
    * */
   async getHistoryEvent(id) {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -93,7 +120,7 @@ export class Client {
    * @return {Promise<RocketBrief[]>}
    * */
   async getRockets() {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -118,7 +145,7 @@ export class Client {
    * @return {Promise<RocketFull>}
    * */
   async getRocket(id) {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -135,7 +162,7 @@ export class Client {
    * @return {Promise<Roadster>}
    * */
   async getRoadster() {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -152,7 +179,7 @@ export class Client {
    * @return {Promise<Item[]>}
    * */
   async getSentToMars() {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -170,7 +197,7 @@ export class Client {
    * @return {Promise<Item[]>}
    * */
   async sendToMars(item) {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 
   /**
@@ -181,6 +208,6 @@ export class Client {
    * @return {Promise<Item[]>}
    * */
   async cancelSendingToMars(item) {
-    throw new Error("Not implemented");
+      throw new Error("Not implemented");
   }
 }

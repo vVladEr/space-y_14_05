@@ -9,8 +9,11 @@ import fetch from "node-fetch";
 const rootDir = process.cwd();
 const port = 3000;
 const app = express();
+const loginedUsers = {};
 
 app.use(express.static('spa/build'));
+app.use(express.json());
+app.use(cookieParser());
 
 app.get("/client.mjs", (_, res) => {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
@@ -27,6 +30,22 @@ app.get("/", (_, res) => {
 app.get("*", (_, res) => {
   res.sendFile(path.join(rootDir, "spa/build/index.html"));
 })
+
+app.post("/api/login", (req, res) => {
+  let username = req.body.username;
+  loginedUsers[username] = true;
+  res.cookie('username', username, {secure: true, httpOnly: true, sameSite: true});
+  res.json({username: username});
+  console.log(`logined user ${username}`)
+});
+
+
+app.post("/api/logout", (req, res) => {
+  let username = req.body.username;
+  delete loginedUsers[username];
+  res.json({status: true});
+  console.log(`logout user ${username}`)
+});
 
 https.createServer(
         {
